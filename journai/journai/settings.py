@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     # REST framework
     'rest_framework',
     # Journai app
-    'journaiapp.apps.JournaiappConfig',
+    'journaiapp',
     # CORS
     'corsheaders',
 ]
