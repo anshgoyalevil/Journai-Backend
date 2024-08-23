@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 import os
@@ -34,7 +34,6 @@ async def create_new_trip(trip_data: dict):
     # Generate content based on the prompt
     response = model.generate_content(prompt)
     response_text = response.text
-    print(response_text)
 
     start_index = response_text.find('{')
     end_index = response_text.rfind('}')
@@ -43,7 +42,7 @@ async def create_new_trip(trip_data: dict):
         json_str = response_text[start_index:end_index + 1]
         try:
             data = json.loads(json_str)
-            return {"data": data}
+            return {"data": data}, status.HTTP_201_CREATED
         except json.JSONDecodeError as e:
             raise HTTPException(status_code=400, detail=f"Failed to parse JSON: {str(e)}")
     else:
