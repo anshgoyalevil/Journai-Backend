@@ -31,8 +31,11 @@ API_KEY = os.environ.get("API_KEY")
 # Access Key to stop Gemini Abuse
 ACCESS_KEY = os.environ.get("ACCESS_KEY")
 
+
 @app.post("/api/newtrip")
 async def create_new_trip(trip_data: dict, authorization: str = Header(None)):
+
+    print(trip_data["accessKey"])
 
     # Check if the authorization header is provided and starts with 'Bearer '
     if authorization is None or not authorization.startswith("Bearer "):
@@ -46,6 +49,16 @@ async def create_new_trip(trip_data: dict, authorization: str = Header(None)):
     if api_key != API_KEY:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API Key")
+
+    # Check if the trip_data contains an access_key
+    if "accessKey" not in trip_data:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Missing access_key in trip_data")
+
+    # Check if the access_key matches the backend access_key
+    if trip_data["accessKey"] != ACCESS_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Access Key")
 
     # Parse the incoming JSON request
     prompt = generate_prompt(trip_data)
