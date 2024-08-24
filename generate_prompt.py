@@ -2,6 +2,8 @@ import json
 
 
 def generate_prompt(trip_data):
+    """Generates the prompt based on Trip Data"""
+
     prompt = "Design a trip itenary with the following details. If there are multiple destinations, design accordingly. Budget is in dollar:\n"
 
     string_trip_data = json.dumps(trip_data)
